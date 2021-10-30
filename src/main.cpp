@@ -26,6 +26,13 @@ void setup() {
   right(motor1, motor2, 255);
   delay(2000);
   forward(motor1, motor2, 255);
+  //Go forward to the middle block
+  //Grab middle block
+  //Turn
+  //Go to the second block
+  //Grab second block
+  //Scan environment for blocks
+  //Need to run this constantly, say every .5 second?
   if (get_ultrasonic() < MIN_DISTANCE) {
     //Stop robot
   }
