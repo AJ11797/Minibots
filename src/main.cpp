@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SparkFun_TB6612.h>
-#include <ultrasonic.h>
+#include <ultrasonic.cpp>
+#include <switch.cpp>
 
 const int offsetA = 1;
 const int offsetB = 1;
@@ -20,6 +21,7 @@ Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 
 
 void setup() {
+  switch_setup();
   ultrasonic_setup();
   forward(motor1, motor2, 255);
   delay(2000);
