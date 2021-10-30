@@ -18,3 +18,4 @@ long get_ultrasonic() {
   long duration = pulseIn(echoPin, HIGH);
   long cm = (duration/2) / 29.1; 
   return cm;
+}
