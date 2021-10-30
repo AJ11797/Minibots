@@ -1,7 +1,7 @@
 int trigPin = 11;    // Trigger
 int echoPin = 12;    // Echo
 
-void setup() {
+void ultrasonic_setup() {
   Serial.begin (9600);
   //Define inputs and outputs
   pinMode(trigPin, OUTPUT);
