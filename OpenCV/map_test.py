@@ -1,7 +1,7 @@
 import pygame
 from time import sleep
 
-test_token_positions=[ [50, 270] ]
+
 
 def draw_base(x,y, surface, base_dimensions = 350/3):
     pygame.draw.rect(surface, (0,0,255), pygame.Rect(x,y,base_dimensions, base_dimensions))
@@ -34,10 +34,10 @@ def generate_map(coordinates):
     draw_token((width+token_dimensions)/2 -100, (height+token_dimensions)/2-100, surface)
     draw_token((width+token_dimensions)/2 +100, (height+token_dimensions)/2+100, surface)
 
-    draw_unknown_tokens(test_token_positions, surface)
+    draw_unknown_tokens(coordinates, surface)
 
 if __name__=="__main__":
-
+    test_token_positions=[ [250, 270] ]
     generate_map(test_token_positions)
 
     pygame.display.flip() #Display the map
