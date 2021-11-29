@@ -147,12 +147,7 @@ while True:
     except:
         pass
 
-
-
-
     sleep(2)
-
-
 
 cap.release()
 cv2.destroyAllWindows()
