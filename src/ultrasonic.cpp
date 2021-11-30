@@ -1,4 +1,4 @@
-int trigPin = 11;    // Trigger
+/*int trigPin = 11;    // Trigger
 int echoPin = 12;    // Echo
 
 void ultrasonic_setup() {
@@ -16,6 +16,7 @@ long get_ultrasonic() {
   digitalWrite(trigPin, LOW);
   pinMode(echoPin, INPUT);
   long duration = pulseIn(echoPin, HIGH);
-  long cm = (duration/2) / 29.1; 
+  long cm = (duration/2) / 29.1;
   return cm;
 }
+*/

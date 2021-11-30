@@ -1,4 +1,4 @@
-void switch_setup() {
+/*void switch_setup() {
     int inPin;
     int reading;
     pinMode(inPin, INPUT);
@@ -9,3 +9,4 @@ void switch_setup() {
         }
     }
 }
+*/

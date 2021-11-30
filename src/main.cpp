@@ -1,26 +1,135 @@
 #include <Arduino.h>
 #include <SparkFun_TB6612.h>
-#include <ultrasonic.cpp>
-#include <switch.cpp>
+#include <Wire.h>
+#include <Servo.h>
+#include <math.h>
 
+const int addr = 0x8;
+int x_dist, y_dist = 0;
+
+const double MOVE_VEL = 0.21; //mm per millisecond
+const double TURN_VEL = M_PI / 2300; //rad per millisecond
+double pos[2] = {0.0, 0.0};
+double angl = 0;
+int grabL = 0;
+int grabR = 0;
 const int offsetA = 1;
 const int offsetB = 1;
+
 const int MIN_DISTANCE = 10;
 
-#define AIN1 7
-#define BIN1 5
-#define AIN2 8
-#define BIN2 4
-#define PWMA 9
-#define PWMB 3
-#define STBY 6
+#define AIN1 12
+#define BIN1 10
+#define AIN2 13
+#define BIN2 9
+#define PWMA 6
+#define PWMB 5
+#define STBY 11
+#define GRABL 7
+#define GRABR 2
+int SWITCH = 13;
 
 Motor motor1 = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
 Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 
+Servo servoL;
+Servo servoR;
+
+
+int recieve[2];
+int count = 0;
+
+void receiveEvent(){
+  //while(Wire.available()){
+    //int c = Wire.read();
+    //Serial.print(c);
+  //}
+  //for (int i = 0; i<4; i++){
+    recieve[count] = Wire.read();
+    Serial.println(recieve[count]);
+    //Serial.println(recieve[count]);
+    count ++;
+
+    if (count==2){
+      count = 0;
+      recieve[0] -= 128;
+      recieve[1] *= 10;
+      //recieve[1] *= 10;
+      Serial.println("Next Ord");
+      Serial.println((int)recieve[0]);
+      Serial.println((int)recieve[1]);
+  //}
+}
+}
+
+void turn_left(Motor motor1,Motor motor2 ,int speed, int duration){
+  motor1.drive(-1*speed);
+  motor2.drive(speed);
+  delay(duration);
+  brake(motor1, motor2);
+}
+
+void drive(int x, int y) { //x: horizontal, y: forward
+  float theta = atan2(x,y);
+  float turn = theta * 2 * 650/ M_PI ;
+  float radius = pow((x*x + y*y),0.5);
+
+  Serial.print("here it is");
+  Serial.print(theta);
+  Serial.print(turn);
+  Serial.println(radius);
+  if (turn <0) {
+    turn = 2600 + turn;
+  }
+  //Rotate
+  if (x < 0) {
+    turn_left(motor1, motor2, 100, turn);
+  }
+  else if (x > 0) {
+    turn_left(motor1, motor2, -100, turn);
+  }
+  //side to side motion
+  forward(motor1, motor2, -100);
+  delay(radius/MOVE_VEL);
+  brake(motor1, motor2);
+  /*
+  //forward motion
+  if (y > 0) {
+    forward(motor1, motor2, -100);
+  }
+  else if (y < 0) {
+    forward(motor1, motor2, 100);
+  }
+  delay(abs(y) / MOVE_VEL);
+  brake(motor1, motor2);
+
+
+
+
+
+  servoL.write(175);
+  */
+  /*
+  double ang = atan2(x, y) - angl;
+  angl += ang;
+  if (ang < 0) {
+    left(motor1, motor2, 100);
+  }
+  else if (ang > 0) {
+    right(motor1, motor2, 100);
+  }
+  delay(abs(ang)/TURN_VEL);
+  brake(motor1, motor2);
+  double dis = pow(x*x + y*y, 0.5);
+  forward(motor1, motor2, -255);
+  delay(dis/MOVE_VEL);
+  brake(motor1, motor2);
+  */
+}
 
 
 void setup() {
+  /*
   switch_setup();
   ultrasonic_setup();
   forward(motor1, motor2, 255);
@@ -37,9 +146,33 @@ void setup() {
   //Need to run this constantly, say every .5 second?
   if (get_ultrasonic() < MIN_DISTANCE) {
     //Stop robot
-  }
+
+  }*/
+  Serial.begin(9600);
+  Wire.begin(addr);
+
+  Wire.onReceive(receiveEvent);
+  //Serial.println("Up and running");
+
+  delay(3000);
+  servoL.attach(GRABL);
+  servoR.attach(GRABR);
+  servoR.write(90);
+
+
+
+  //servoL.write(120);
+  int token[2] = {recieve[0], recieve[1]};
+  drive(-1*token[0], token[1]);
+
+
+
 }
+
+
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  delay(100);
 }
