@@ -207,7 +207,7 @@ void setup() {
 
 
 void loop() {
-  /* int token[2] = {recieve[0], recieve[1]};
+  int token[2] = {recieve[0], recieve[1]};
   drive(-1*token[0], token[1]);
   servoL.write(175);
   drive(token[0], -1* token[1]);
@@ -220,7 +220,7 @@ void loop() {
   go_forward(motor1, motor2, 100);
   delay(300/MOVE_VEL);
   brake(motor1, motor2);
-  turn_left(motor1, motor2, 100, 1224);*/
+  turn_left(motor1, motor2, 100, 1224);
 
 
   delay(100);
