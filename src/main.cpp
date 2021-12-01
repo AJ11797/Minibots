@@ -35,6 +35,7 @@ Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 Servo servoL;
 Servo servoR;
 
+char grabber = "L";
 
 int recieve[2];
 int count = 0;
@@ -62,6 +63,12 @@ void receiveEvent(){
 }
 }
 
+void go_forward(Motor motor1, Motor motor2, int speed){
+  motor1.drive(speed);
+  motor2.drive(0.97*speed);
+
+}
+
 void turn_left(Motor motor1,Motor motor2 ,int speed, int duration){
   motor1.drive(-1*speed);
   motor2.drive(speed);
@@ -70,7 +77,7 @@ void turn_left(Motor motor1,Motor motor2 ,int speed, int duration){
 }
 
 void drive(int x, int y) { //x: horizontal, y: forward
-  float theta = atan2(x,y);
+  /*float theta = atan2(x,y);
   float turn = theta * 2 * 650/ M_PI ;
   float radius = pow((x*x + y*y),0.5);
 
@@ -80,35 +87,47 @@ void drive(int x, int y) { //x: horizontal, y: forward
   Serial.println(radius);
   if (turn <0) {
     turn = 2600 + turn;
-  }
+  }*/
   //Rotate
-  if (x < 0) {
-    turn_left(motor1, motor2, 100, turn);
+  int  x_org = x;
+  if (grabber == "L"){
+    x -= 40;
+  } else{
+    x += 40;
   }
-  else if (x > 0) {
-    turn_left(motor1, motor2, -100, turn);
+  if (x_org > 0) {
+    turn_left(motor1, motor2, 100, 615);
+
+  }
+  else if (x_org < 0) {
+    turn_left(motor1, motor2, -100, 570);
   }
   //side to side motion
-  forward(motor1, motor2, -100);
-  delay(radius/MOVE_VEL);
+  go_forward(motor1, motor2, -100);
+  delay(abs(x)/MOVE_VEL);
   brake(motor1, motor2);
-  /*
+
+  //Rotate
+  if (x_org < 0) {
+    turn_left(motor1, motor2, 100, 615);
+  }
+  else if (x_org > 0) {
+    turn_left(motor1, motor2, -100, 570);
+  }
+
+
   //forward motion
   if (y > 0) {
-    forward(motor1, motor2, -100);
+    go_forward(motor1, motor2, -100);
   }
   else if (y < 0) {
-    forward(motor1, motor2, 100);
+    go_forward(motor1, motor2, 100);
   }
   delay(abs(y) / MOVE_VEL);
   brake(motor1, motor2);
 
 
 
-
-
-  servoL.write(175);
-  */
   /*
   double ang = atan2(x, y) - angl;
   angl += ang;
@@ -157,22 +176,52 @@ void setup() {
   delay(3000);
   servoL.attach(GRABL);
   servoR.attach(GRABR);
+  servoL.write(90);
   servoR.write(90);
 
 
 
   //servoL.write(120);
   int token[2] = {recieve[0], recieve[1]};
-  drive(-1*token[0], token[1]);
+  //drive(-1*token[0], token[1]);
+  //drive(token[0], -1* token[1]);
 
+  //turn_left(motor1, motor2, 100, 9788);
 
+  go_forward(motor1, motor2 , -100);
+  delay(1210/ MOVE_VEL);
+  brake(motor1, motor2);
+  servoL.write(270);
 
+  turn_left(motor1, motor2, 100, 1224);
+  go_forward(motor1, motor2, -100);
+  delay(1410/ MOVE_VEL);
+  brake(motor1, motor2);
+
+  servoL.write(90);
+  go_forward(motor1, motor2, 100);
+  delay(300/MOVE_VEL);
+  brake(motor1, motor2);
 }
 
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  /* int token[2] = {recieve[0], recieve[1]};
+  drive(-1*token[0], token[1]);
+  servoL.write(175);
+  drive(token[0], -1* token[1]);
+  turn_left(motor1, motor2, 100, 1224);
+  go_forward(motor1, motor2, 100);
+  delay(300/MOVE_VEL);
+  brake(motor1, motor2);
+  servoL.write(90);
+
+  go_forward(motor1, motor2, 100);
+  delay(300/MOVE_VEL);
+  brake(motor1, motor2);
+  turn_left(motor1, motor2, 100, 1224);*/
+
 
   delay(100);
 }
